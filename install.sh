@@ -13,7 +13,7 @@ COLLABORATOR="JSK Laboratories"
 EXTENSION_DESCRIPTION="Interact with ROS enabled robots."
 
 cd node_modules/scratch-vm
-# npm install hoge
+npm install mathjs
 cd ../../
 
 mkdir -p node_modules/scratch-vm/src/extensions/scratch3_${EXTENSION_ID}
