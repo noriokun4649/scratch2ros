@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.91 r13725"
+   width="40"
+   height="40"
+   viewBox="0 0 40 40.000001"
+   sodipodi:docname="ros-small.svg"
+   inkscape:export-filename="/tmp/ros.svg"
+   inkscape:export-xdpi="35.643566"
+   inkscape:export-ydpi="35.643566">
+  <metadata
+     id="metadata8">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs6" />
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1863"
+     inkscape:window-height="1056"
+     id="namedview4"
+     showgrid="false"
+     inkscape:zoom="13.852574"
+     inkscape:cx="30.855745"
+     inkscape:cy="8.8175808"
+     inkscape:window-x="57"
+     inkscape:window-y="24"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg2"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0" />
+  <path
+     style="fill:#410069;fill-opacity:1"
+     d="m 10.995286,28.380852 c -1.0426173,-0.877303 -1.1268337,-2.40839 -0.184315,-3.35091 1.777812,-1.777811 4.529092,0.484303 3.35364,2.757375 -0.552472,1.068364 -2.231364,1.382778 -3.169325,0.593535 z m 7.883584,0.167169 c -1.048108,-0.568697 -1.352916,-2.389249 -0.55816,-3.333762 0.898709,-1.068055 2.366836,-1.075897 3.257501,-0.0174 0.840831,0.999269 0.729068,2.348618 -0.263719,3.183993 -0.604646,0.508777 -1.671135,0.581975 -2.435622,0.167167 z M 26.275832,28.2869 c -1.852025,-1.626098 -0.0553,-4.67046 2.200211,-3.728042 1.470852,0.614561 1.779994,2.585977 0.578219,3.687321 -0.865964,0.793598 -1.903629,0.808806 -2.77843,0.04072 z M 11.07675,20.681058 c -0.578167,-0.454785 -0.970325,-1.20309 -0.970325,-1.851548 0,-0.697073 0.65901,-1.615454 1.430729,-1.993829 1.787439,-0.876382 3.593768,1.3064 2.627457,3.175041 -0.523411,1.012166 -2.192623,1.374532 -3.087861,0.670336 z m 7.643414,-0.0288 c -0.622151,-0.525924 -0.837142,-1.006791 -0.837142,-1.872415 0,-1.488228 1.495824,-2.549363 2.816084,-1.997723 1.61131,0.673249 1.938984,2.708404 0.615386,3.822137 -0.697983,0.587314 -1.929387,0.610096 -2.594328,0.048 z m 7.5311,-0.172059 c -1.201586,-1.101172 -0.91535,-2.963504 0.555484,-3.614123 1.9348,-0.855853 3.658269,1.095531 2.717867,3.077282 -0.341912,0.720526 -1.015729,1.098588 -1.958007,1.098588 -0.551523,0 -0.834021,-0.120645 -1.315344,-0.561747 z M 11.492376,13.137762 c -0.733885,-0.371515 -1.385951,-1.303217 -1.385951,-1.980311 0,-1.1614003 1.000304,-2.212435 2.105646,-2.212435 1.351647,0 2.215356,0.8561992 2.214039,2.194787 -0.0016,1.623928 -1.566856,2.689916 -2.933734,1.997959 z m 7.672088,0.0615 c -0.823476,-0.368948 -1.281442,-1.066973 -1.281442,-1.953151 0,-1.464053 0.78985,-2.3010921 2.171366,-2.3010921 0.676818,0 0.890013,0.088993 1.374956,0.5739358 0.75084,0.7508393 0.920304,1.6077713 0.48941,2.4748323 -0.575121,1.157278 -1.731872,1.663556 -2.75429,1.205475 z m 7.605333,-0.08643 c -1.434763,-0.656056 -1.702886,-2.520686 -0.518533,-3.6060646 1.429346,-1.3098966 3.558662,-0.2850273 3.554734,1.7109426 -0.0031,1.547712 -1.606793,2.548732 -3.036201,1.895122 z"
+     id="path4138"
+     inkscape:connector-curvature="0"
+     sodipodi:nodetypes="ssssssssssssssssssssssssssssssscsssssssssss" />
+</svg>
