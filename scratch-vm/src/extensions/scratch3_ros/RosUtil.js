@@ -134,7 +134,7 @@ class Scratch3RosBase {
     // Peripheral connection functions
     scan () {
         this.masterURI = prompt('Master URI:')
-        this.connect('ws://' + this.masterURI + ':9090');
+        this.connect('wss://' + this.masterURI + ':9090');
     }
 
     connect (url) {
