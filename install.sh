@@ -13,8 +13,7 @@ COLLABORATOR="JSK Laboratories"
 EXTENSION_DESCRIPTION="Interact with ROS enabled robots."
 
 cd node_modules/scratch-vm
-npm install mathjs
-npm install roslib
+npm install mathjs roslib circular-json
 cd ../../
 
 mkdir -p node_modules/scratch-vm/src/extensions/scratch3_${EXTENSION_ID}
