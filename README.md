@@ -13,3 +13,8 @@ npm install
 git clone https://github.com/noriokun4649/scratch2ros.git
 sh scratch2ros/install.sh
 ```
+
+## How to run
+```
+npm start # cd is scratch-gui
+```
