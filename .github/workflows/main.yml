@@ -30,7 +30,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: .
-          file: ./bot/Dockerfile
+          file: ./Dockerfile
 
           push: true
           tags: |
