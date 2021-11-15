@@ -8,12 +8,25 @@ const icon = 'data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0i
 
 class Scratch3RosBlocks extends Scratch3RosBase {
 
+    get TOGGLE_MENU() {
+        return [
+            {
+                text: 'ON',
+                value: '0'
+            },
+            { 
+                text: 'OFF',
+                value: '1' 
+            },
+        ];
+    }
+
     constructor(runtime) {
         super('ROS', 'ros', runtime);
     }
 
     // customize to handle topics advertised from Scratch
-    subscribeTopic ({TOPIC}) {
+    subscribeTopic({ TOPIC }) {
         const that = this;
         return new Promise(resolve => {
             that.ros.getTopic(TOPIC).then(
@@ -33,11 +46,11 @@ class Scratch3RosBlocks extends Scratch3RosBase {
     }
 
     // customize to handle unadvertised topics
-    publishTopic ({MSG, TOPIC}, util) {
+    publishTopic({ MSG, TOPIC }, util) {
         const ROS = this.ros;
         let msg = this._getVariableValue(MSG, util.target);
         if (msg === null || typeof msg === 'undefined') msg = this._tryParse(MSG);
-        if (!this._isJSON(msg)) msg = {data: msg};
+        if (!this._isJSON(msg)) msg = { data: msg };
 
         ROS.getTopic(TOPIC).then(rosTopic => {
             if (!rosTopic.name) return;
@@ -45,11 +58,11 @@ class Scratch3RosBlocks extends Scratch3RosBase {
             if (rosTopic.messageType) {
                 if (rosTopic.messageType === 'std_msgs/String' &&
                     !(keys.length === 1 && keys[0] === 'data')) {
-                    msg = {data: JSON.stringify(msg)};
+                    msg = { data: JSON.stringify(msg) };
                 }
             } else {
                 if (!(keys.length === 1 && keys[0] === 'data')) {
-                    msg = {data: JSON.stringify(msg)};
+                    msg = { data: JSON.stringify(msg) };
                 }
                 rosTopic.messageType = ROS.getRosType(msg.data);
             }
@@ -57,12 +70,12 @@ class Scratch3RosBlocks extends Scratch3RosBase {
         });
     }
 
-    callService ({REQUEST, SERVICE}, util) {
+    callService({ REQUEST, SERVICE }, util) {
         const req = this._getVariableValue(REQUEST, util.target) || this._tryParse(REQUEST);
         return this.ros.callService(SERVICE, req);
     }
 
-    getParamValue ({NAME}) {
+    getParamValue({ NAME }) {
         const that = this;
         return new Promise(resolve => {
             const param = that.ros.getParam(NAME);
@@ -76,7 +89,7 @@ class Scratch3RosBlocks extends Scratch3RosBase {
         });
     }
 
-    setParamValue ({NAME, VALUE}) {
+    setParamValue({ NAME, VALUE }) {
         const param = this.ros.getParam(NAME);
         const val = Array.isArray(VALUE) ?
             VALUE.map(v => this._tryParse(v, v)) :
@@ -84,7 +97,7 @@ class Scratch3RosBlocks extends Scratch3RosBase {
         param.set(val);
     }
 
-    getSlot ({OBJECT, SLOT}, util) {
+    getSlot({ OBJECT, SLOT }, util) {
         const evalSlot = function (obj, slots) {
             const slotArr = slots.split(/\.|\[|\]/).filter(Boolean);
             for (let i = 0; i < slotArr.length; i++) {
@@ -113,7 +126,7 @@ class Scratch3RosBlocks extends Scratch3RosBase {
         return res;
     }
 
-    setSlot ({VAR, SLOT, VALUE}, util) {
+    setSlot({ VAR, SLOT, VALUE }, util) {
         const setNestedValue = function (obj, slots, value) {
             const last = slots.length - 1;
             for (let i = 0; i < last; i++) {
@@ -144,15 +157,15 @@ class Scratch3RosBlocks extends Scratch3RosBase {
         // TODO: cloud variables
     }
 
-    showVariable (args) {
+    showVariable(args) {
         this._changeVariableVisibility(args, true);
     }
 
-    hideVariable (args) {
+    hideVariable(args) {
         this._changeVariableVisibility(args, false);
     }
 
-    solveFormula ({EXPRESSION, OBJECT}, util) {
+    solveFormula({ EXPRESSION, OBJECT }, util) {
         const obj = this._getVariableValue(OBJECT, util.target) || this._tryParse(OBJECT);
         let binds;
         if (this._isJSON(obj)) {
@@ -173,7 +186,7 @@ class Scratch3RosBlocks extends Scratch3RosBase {
         }
     }
 
-    getInfo () {
+    getInfo() {
         const stringArg = defValue => ({
             type: ArgumentType.STRING,
             defaultValue: defValue
@@ -211,6 +224,30 @@ class Scratch3RosBlocks extends Scratch3RosBase {
             menuIconURI: icon,
 
             blocks: [
+                {
+                    opcode: 'followMe',
+                    blockType: BlockType.COMMAND,
+                    text: 'Follow me を [STATE] にする',
+                    arguments: {
+                        STATE: {
+                            menu: 'toggleMenu',
+                            type: ArgumentType.STRING,
+                            defaultValue: 'ON'
+                        }
+                    }
+                },
+                {
+                    opcode: 'changeMap',
+                    blockType: BlockType.COMMAND,
+                    text: 'Map を [STATE] にする',
+                    arguments: {
+                        STATE: {
+                            menu: 'toggleMenu',
+                            type: ArgumentType.STRING,
+                            defaultValue: 'ON'
+                        }
+                    }
+                },
                 {
                     opcode: 'subscribeTopic',
                     blockType: BlockType.REPORTER,
@@ -309,7 +346,11 @@ class Scratch3RosBlocks extends Scratch3RosBase {
                 topicsMenu: '_updateTopicList',
                 servicesMenu: '_updateServiceList',
                 variablesMenu: '_updateVariableList',
-                paramsMenu: '_updateParamList'
+                paramsMenu: '_updateParamList',
+                toggleMenu: {
+                    acceptReporters: false,
+                    items: this.TOGGLE_MENU
+                }
             }
         };
     }
