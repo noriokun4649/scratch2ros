@@ -1,6 +1,6 @@
-const math = require('mathjs');
-const JSON = require('circular-json');
+const JSON = require('json5');
 const ROSLIB = require('roslib');
+const mathjs = require('mathjs');
 
 class RosUtil extends ROSLIB.Ros {
     constructor (runtime, extensionId, options) {
@@ -123,8 +123,8 @@ class Scratch3RosBase {
         this.runtime = runtime;
 
         this.runtime.registerPeripheralExtension(this.extensionId, this);
-
-        math.config({matrix: 'Array'});
+        this.math = mathjs.create(mathjs.all);
+        this.math.config({matrix: 'Array'});
 
         this.topicNames = ['/topic'];
         this.serviceNames = ['/service'];
