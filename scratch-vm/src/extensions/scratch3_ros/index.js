@@ -1,5 +1,4 @@
-const math = require('mathjs');
-const JSON = require('circular-json');
+const JSON = require('json5');
 const BlockType = require('../../extension-support/block-type');
 const ArgumentType = require('../../extension-support/argument-type');
 const Scratch3RosBase = require('./RosUtil');
@@ -178,8 +177,8 @@ class Scratch3RosBlocks extends Scratch3RosBase {
         }
 
         try {
-            const result = math.eval(EXPRESSION, binds);
-            if (math.typeof(result) === 'Unit') return result.toNumber();
+            const result = this.math.eval(EXPRESSION, binds);
+            if (this.math.typeof(result) === 'Unit') return result.toNumber();
             return result;
         } catch (err) {
             return;
