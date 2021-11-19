@@ -24,6 +24,24 @@ class Scratch3RosBlocks extends Scratch3RosBase {
         super('ROS', 'ros', runtime);
     }
 
+
+    followMe({STATE}){
+        const ROS = this.ros;
+
+        ROS.getTopic("/scratch/state_change").then(rosTopic => {
+            if (!rosTopic.name) return;
+            if (rosTopic.messageType === 'scratch_msgs/StateChange') {
+                msg = { data: JSON.stringify({
+                        target: 'hsr_follower',
+                        enable: STATE,
+                        detail : ''
+                    })
+                };
+                rosTopic.publish(msg);
+            }
+        });
+    }
+
     // customize to handle topics advertised from Scratch
     subscribeTopic({ TOPIC }) {
         const that = this;
