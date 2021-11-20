@@ -11,17 +11,41 @@ class Scratch3RosBlocks extends Scratch3RosBase {
         return [
             {
                 text: 'ON',
-                value: '0'
+                value: '1'
             },
             { 
                 text: 'OFF',
-                value: '1' 
+                value: '0' 
             },
         ];
     }
 
     constructor(runtime) {
         super('ROS', 'ros', runtime);
+    }
+
+
+    followMe({STATE}){
+        const ROS = this.ros;
+        ROS.getTopic("/scratch/state_change").then(rosTopic => {
+            console.log(STATE)
+            var state;
+            if (STATE === "1"){
+                state = true;
+            }else{
+                state = false;
+            }
+            if (!rosTopic.name) return;
+            if (rosTopic.messageType === 'scratch_msgs/StateChange') {
+                msg = {
+                    target: 'hsr_follower',
+                    enable: state,
+                    detail : ''
+                };
+                console.log(msg)
+                rosTopic.publish(msg);
+            }
+        });
     }
 
     // customize to handle topics advertised from Scratch
@@ -65,6 +89,7 @@ class Scratch3RosBlocks extends Scratch3RosBase {
                 }
                 rosTopic.messageType = ROS.getRosType(msg.data);
             }
+            console.log(msg)
             rosTopic.publish(msg);
         });
     }
@@ -231,7 +256,7 @@ class Scratch3RosBlocks extends Scratch3RosBase {
                         STATE: {
                             menu: 'toggleMenu',
                             type: ArgumentType.STRING,
-                            defaultValue: 'ON'
+                            defaultValue: '1'
                         }
                     }
                 },
@@ -243,7 +268,7 @@ class Scratch3RosBlocks extends Scratch3RosBase {
                         STATE: {
                             menu: 'toggleMenu',
                             type: ArgumentType.STRING,
-                            defaultValue: 'ON'
+                            defaultValue: '1'
                         }
                     }
                 },
