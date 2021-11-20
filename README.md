@@ -1,6 +1,15 @@
 # scratch2ros
 from https://github.com/Affonso-Gui/scratch3-ros-vm
 
+## Setup
+```sh
+sudo apt-get install aptitude
+sudo aptitude install npm
+
+curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
+sudo apt-get install -y nodejs
+```
+
 ## How to use
 
 ```sh
