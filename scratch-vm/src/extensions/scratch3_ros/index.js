@@ -13,9 +13,9 @@ class Scratch3RosBlocks extends Scratch3RosBase {
                 text: 'ON',
                 value: '1'
             },
-            { 
+            {
                 text: 'OFF',
-                value: '0' 
+                value: '0'
             },
         ];
     }
@@ -32,14 +32,14 @@ class Scratch3RosBlocks extends Scratch3RosBase {
     }
 
 
-    followMe({STATE}){
+    followMe({ STATE }) {
         const ROS = this.ros;
         ROS.getTopic("/scratch/state_change").then(rosTopic => {
             console.log(STATE)
             var state;
-            if (STATE === "1"){
+            if (STATE === "1") {
                 state = true;
-            }else{
+            } else {
                 state = false;
             }
             if (!rosTopic.name) return;
@@ -47,7 +47,7 @@ class Scratch3RosBlocks extends Scratch3RosBase {
                 msg = {
                     target: 'hsr_follower',
                     enable: state,
-                    detail : ''
+                    detail: ''
                 };
                 console.log(msg)
                 rosTopic.publish(msg);
