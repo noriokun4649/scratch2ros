@@ -22,6 +22,13 @@ class Scratch3RosBlocks extends Scratch3RosBase {
 
     constructor(runtime) {
         super('ROS', 'ros', runtime);
+        this.start = false;
+        this.receiveIt = (msg) => {
+            if (msg != null) {
+                this.msg = msg.data;
+                this.start = true;
+            }
+        }
     }
 
 
@@ -48,13 +55,37 @@ class Scratch3RosBlocks extends Scratch3RosBase {
         });
     }
 
-    goXYRobot({X,Y}) {
-        this.actionClient = new ROSLIB.ActionClient({
-            ros : this.ros,
-            serverName : '/move_base',
-            actionName : 'move_base_msgs/MoveBaseAction',
-            timeout : 10
-        });
+    receiveMessage({VAR}, util) {
+        if (this.start && this.msg != null) {
+            this.start = false;
+            const variable = util.target.lookupVariableByNameAndType(VAR);
+            variable.value = this.msg;
+            if (variable.isCloud) {
+                util.ioQuery('cloud', 'requestUpdateVariable', [variable.name, this.msg]);
+            }
+            return true;
+        }
+        return this.start;
+    }
+
+    startReceiveMessage({ }) {
+        if (!this.topic) {
+            this.start = true;
+            this.topic = this.ros.createTopic("/scratch/from_operator", "std_msgs/String");
+            this.topic.subscribe(this.receiveIt);
+            console.log("b");
+        }
+        console.log("c");
+    }
+
+    endReceiveMessage({ }) {
+        this.start = false;
+        if (this.topic) {
+            this.topic.unsubscribe(this.receiveIt);
+            this.topic = null;
+        }
+    }
+
     goXYRobot({ X, Y }) {
         this.ros.goMove(X, Y);
     }
@@ -280,6 +311,44 @@ class Scratch3RosBlocks extends Scratch3RosBase {
 
             blocks: [
                 {
+                    opcode: 'receiveMessage',
+                    text: '[MESSAGE] を受け取って[VAR]に入れる',
+                    blockType: BlockType.HAT,
+                    arguments: {
+                        MESSAGE: {
+                            menu: 'messageMenu',
+                            type: ArgumentType.STRING,
+                            defaultValue: 'from_operator'
+                        },
+                        VAR: variableArg
+                    }
+                },
+                {
+                    opcode: 'startReceiveMessage',
+                    text: '[MESSAGE]を始める',
+                    blockType: BlockType.COMMAND,
+                    arguments: {
+                        MESSAGE: {
+                            menu: 'messageMenu',
+                            type: ArgumentType.STRING,
+                            defaultValue: 'from_operator'
+                        }
+                    }
+                },
+                {
+                    opcode: 'endReceiveMessage',
+                    text: '[MESSAGE]をやめる',
+                    blockType: BlockType.COMMAND,
+                    arguments: {
+                        MESSAGE: {
+                            menu: 'messageMenu',
+                            type: ArgumentType.STRING,
+                            defaultValue: 'from_operator'
+                        }
+                    }
+                },
+                '---',
+                {
                     opcode: 'followMe',
                     blockType: BlockType.COMMAND,
                     text: 'Follow me を [STATE] にする',
@@ -421,6 +490,15 @@ class Scratch3RosBlocks extends Scratch3RosBase {
                 toggleMenu: {
                     acceptReporters: false,
                     items: this.TOGGLE_MENU
+                },
+                messageMenu: {
+                    acceptReporters: false,
+                    items: [
+                        {
+                            text: '人からのメッセージ',
+                            value: 'from_operator'
+                        },
+                    ]
                 },
                 areaNameMenu: {
                     acceptReporters: false,

@@ -139,6 +139,14 @@ class RosUtil extends ROSLIB.Ros {
         });
         goal.send();
     }
+
+    createTopic(name,type){
+        return new ROSLIB.Topic({
+            ros: this,
+            name: name,
+            messageType: type
+        })
+    }
 }
 
 class Scratch3RosBase {
