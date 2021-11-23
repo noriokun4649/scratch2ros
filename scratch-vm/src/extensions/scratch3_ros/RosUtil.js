@@ -113,6 +113,32 @@ class RosUtil extends ROSLIB.Ros {
             return 'std_msgs/String';
         }
     }
+
+    goMove(X,Y,Z,W){
+        this.actionClient = new ROSLIB.ActionClient({
+            ros : this,
+            serverName : '/move_base',
+            actionName : 'move_base_msgs/MoveBaseAction',
+            timeout : 10
+        });
+        const positionVec3  = new ROSLIB.Vector3({x:Number(X),y:Number(Y),z:0});
+        const quater = new ROSLIB.Quaternion({x:0, y:0, z:Z, w:W});
+        const goal = new ROSLIB.Goal({
+            actionClient: this.actionClient,
+            goalMessage: {
+                target_pose: {
+                    header: {
+                        frame_id: 'map'
+                    },
+                    pose: new ROSLIB.Pose({
+                        position: positionVec3 ,
+                        orientation: quater
+                    })
+                }
+            }
+        });
+        goal.send();
+    }
 }
 
 class Scratch3RosBase {
