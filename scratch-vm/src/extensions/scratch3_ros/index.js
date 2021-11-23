@@ -105,7 +105,7 @@ class Scratch3RosBlocks extends Scratch3RosBase {
                 this.ros.goMove(5.893180370331, -3.66580319405, -0.00878589193078, 0.999961403307);
                 return;
             case "refrigerator":
-                this.ros.goMove(5.75406360626,  -0.322618514299, 0.0034197094787, 0.999994152776);
+                this.ros.goMove(5.75406360626, -0.322618514299, 0.0034197094787, 0.999994152776);
                 return;
         }
     }
