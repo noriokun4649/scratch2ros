@@ -498,23 +498,23 @@ class Scratch3RosBlocks extends Scratch3RosBase {
                     acceptReporters: false,
                     items: [
                         {
-                            text: 'テーブル1',
+                            text: 'table1',
                             value: 'table1'
                         },
                         {
-                            text: 'テーブル2',
+                            text: 'table2',
                             value: 'table2'
                         },
                         {
-                            text: 'テーブル3',
+                            text: 'table3',
                             value: 'table3'
                         },
                         {
-                            text: '流し',
+                            text: 'sink',
                             value: 'sink'
                         },
                         {
-                            text: '冷蔵庫',
+                            text: 'refrigerator',
                             value: 'refrigerator'
                         },
                     ]
