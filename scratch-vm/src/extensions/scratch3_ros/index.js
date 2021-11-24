@@ -489,7 +489,7 @@ class Scratch3RosBlocks extends Scratch3RosBase {
                     acceptReporters: false,
                     items: [
                         {
-                            text: '人からのメッセージ',
+                            text: 'from operator',
                             value: 'from_operator'
                         },
                     ]
