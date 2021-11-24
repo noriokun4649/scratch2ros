@@ -35,7 +35,6 @@ class Scratch3RosBlocks extends Scratch3RosBase {
     followMe({ STATE }) {
         const ROS = this.ros;
         ROS.getTopic("/scratch/state_change").then(rosTopic => {
-            console.log(STATE)
             var state;
             if (STATE === "1") {
                 state = true;
@@ -49,7 +48,6 @@ class Scratch3RosBlocks extends Scratch3RosBase {
                     enable: state,
                     detail: ''
                 };
-                console.log(msg)
                 rosTopic.publish(msg);
             }
         });
@@ -73,9 +71,7 @@ class Scratch3RosBlocks extends Scratch3RosBase {
             this.start = true;
             this.topic = this.ros.createTopic("/scratch/from_operator", "std_msgs/String");
             this.topic.subscribe(this.receiveIt);
-            console.log("b");
         }
-        console.log("c");
     }
 
     endReceiveMessage({ }) {
@@ -150,7 +146,6 @@ class Scratch3RosBlocks extends Scratch3RosBase {
                 }
                 rosTopic.messageType = ROS.getRosType(msg.data);
             }
-            console.log(msg)
             rosTopic.publish(msg);
         });
     }
