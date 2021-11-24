@@ -307,7 +307,7 @@ class Scratch3RosBlocks extends Scratch3RosBase {
             blocks: [
                 {
                     opcode: 'receiveMessage',
-                    text: '[MESSAGE] を受け取って[VAR]に入れる',
+                    text: 'receive [MESSAGE] and put into [VAR]',
                     blockType: BlockType.HAT,
                     arguments: {
                         MESSAGE: {
@@ -320,7 +320,7 @@ class Scratch3RosBlocks extends Scratch3RosBase {
                 },
                 {
                     opcode: 'startReceiveMessage',
-                    text: '[MESSAGE]を始める',
+                    text: 'start [MESSAGE]',
                     blockType: BlockType.COMMAND,
                     arguments: {
                         MESSAGE: {
@@ -332,7 +332,7 @@ class Scratch3RosBlocks extends Scratch3RosBase {
                 },
                 {
                     opcode: 'endReceiveMessage',
-                    text: '[MESSAGE]をやめる',
+                    text: 'stop [MESSAGE]',
                     blockType: BlockType.COMMAND,
                     arguments: {
                         MESSAGE: {
@@ -346,7 +346,7 @@ class Scratch3RosBlocks extends Scratch3RosBase {
                 {
                     opcode: 'followMe',
                     blockType: BlockType.COMMAND,
-                    text: 'Follow me を [STATE] にする',
+                    text: 'change Follow me into [STATE]',
                     arguments: {
                         STATE: {
                             menu: 'toggleMenu',
@@ -358,7 +358,7 @@ class Scratch3RosBlocks extends Scratch3RosBase {
                 {
                     opcode: 'goXYRobot',
                     blockType: BlockType.COMMAND,
-                    text: 'x座標[X]、y座標[Y]に行く',
+                    text: 'go to x coordinates [X]、y coordinates [Y]',
                     arguments: {
                         X: {
                             type: ArgumentType.NUMBER,
@@ -373,7 +373,7 @@ class Scratch3RosBlocks extends Scratch3RosBase {
                 {
                     opcode: 'goToRobot',
                     blockType: BlockType.COMMAND,
-                    text: '[WHERE]に行く',
+                    text: 'go to [WHERE]',
                     arguments: {
                         WHERE: {
                             menu: 'areaNameMenu',
