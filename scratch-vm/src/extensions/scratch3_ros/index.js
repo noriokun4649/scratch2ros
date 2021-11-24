@@ -361,7 +361,6 @@ class Scratch3RosBlocks extends Scratch3RosBase {
                     }
                 },
                 {
-                {
                     opcode: 'goXYRobot',
                     blockType: BlockType.COMMAND,
                     text: 'x座標[X]、y座標[Y]に行く',
