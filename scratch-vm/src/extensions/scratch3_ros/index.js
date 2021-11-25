@@ -105,6 +105,36 @@ class Scratch3RosBlocks extends Scratch3RosBase {
                 return;
         }
     }
+    getOperatorX(){
+        const that = this;
+        return new Promise(resolve => {
+            that.ros.getTopic("/scratch/operator_pos").then(
+                rosTopic => {
+                    if (rosTopic.messageType !== 'geometry_msgs/Vector3') resolve();
+                    const event = (msg) => {
+                        rosTopic.unsubscribe(event);
+                        resolve(msg.x);
+                    }
+                    rosTopic.subscribe(event);
+                });
+        });
+    }
+    getOperatorY(){
+        const that = this;
+        return new Promise(resolve => {
+            that.ros.getTopic("/scratch/operator_pos").then(
+                rosTopic => {
+                    if (rosTopic.messageType !== 'geometry_msgs/Vector3') resolve();
+                    const event = (msg) => {
+                        rosTopic.unsubscribe(event);
+                        resolve(msg.y);
+                    }
+                    rosTopic.subscribe(event);
+                });
+        });
+    }
+
+
     // customize to handle topics advertised from Scratch
     subscribeTopic({ TOPIC }) {
         const that = this;
@@ -380,6 +410,16 @@ class Scratch3RosBlocks extends Scratch3RosBase {
                             type: ArgumentType.STRING,
                         }
                     }
+                },
+                {
+                    opcode: 'getOperatorX',
+                    blockType: BlockType.REPORTER,
+                    text: 'オペレーターのX座標を取得'
+                },
+                {
+                    opcode: 'getOperatorY',
+                    blockType: BlockType.REPORTER,
+                    text: 'オペレーターのY座標を取得'
                 },
                 '---',
                 {
