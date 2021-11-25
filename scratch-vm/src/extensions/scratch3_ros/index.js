@@ -337,7 +337,7 @@ class Scratch3RosBlocks extends Scratch3RosBase {
             blocks: [
                 {
                     opcode: 'receiveMessage',
-                    text: 'receive [MESSAGE] and put into [VAR]',
+                    text: 'Receive [MESSAGE] and put into [VAR]',
                     blockType: BlockType.HAT,
                     arguments: {
                         MESSAGE: {
@@ -350,7 +350,7 @@ class Scratch3RosBlocks extends Scratch3RosBase {
                 },
                 {
                     opcode: 'startReceiveMessage',
-                    text: 'start [MESSAGE]',
+                    text: 'Start [MESSAGE]',
                     blockType: BlockType.COMMAND,
                     arguments: {
                         MESSAGE: {
@@ -362,7 +362,7 @@ class Scratch3RosBlocks extends Scratch3RosBase {
                 },
                 {
                     opcode: 'endReceiveMessage',
-                    text: 'stop [MESSAGE]',
+                    text: 'Stop [MESSAGE]',
                     blockType: BlockType.COMMAND,
                     arguments: {
                         MESSAGE: {
@@ -376,7 +376,7 @@ class Scratch3RosBlocks extends Scratch3RosBase {
                 {
                     opcode: 'followMe',
                     blockType: BlockType.COMMAND,
-                    text: 'change Follow me into [STATE]',
+                    text: 'Change Follow me into [STATE]',
                     arguments: {
                         STATE: {
                             menu: 'toggleMenu',
@@ -388,7 +388,7 @@ class Scratch3RosBlocks extends Scratch3RosBase {
                 {
                     opcode: 'goXYRobot',
                     blockType: BlockType.COMMAND,
-                    text: 'go to x coordinates [X]、y coordinates [Y]',
+                    text: 'Move to (X: [X], Y: [Y])',
                     arguments: {
                         X: {
                             type: ArgumentType.NUMBER,
@@ -403,7 +403,7 @@ class Scratch3RosBlocks extends Scratch3RosBase {
                 {
                     opcode: 'goToRobot',
                     blockType: BlockType.COMMAND,
-                    text: 'go to [WHERE]',
+                    text: 'Go to [WHERE]',
                     arguments: {
                         WHERE: {
                             menu: 'areaNameMenu',
@@ -414,12 +414,12 @@ class Scratch3RosBlocks extends Scratch3RosBase {
                 {
                     opcode: 'getOperatorX',
                     blockType: BlockType.REPORTER,
-                    text: 'オペレーターのX座標を取得'
+                    text: 'Get operator X'
                 },
                 {
                     opcode: 'getOperatorY',
                     blockType: BlockType.REPORTER,
-                    text: 'オペレーターのY座標を取得'
+                    text: 'Get operator Y'
                 },
                 '---',
                 {
