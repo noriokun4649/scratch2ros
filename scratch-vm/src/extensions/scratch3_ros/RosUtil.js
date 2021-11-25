@@ -1,6 +1,6 @@
-const math = require('mathjs');
-const JSON = require('circular-json');
+const JSON = require('json5');
 const ROSLIB = require('roslib');
+const mathjs = require('mathjs');
 
 class RosUtil extends ROSLIB.Ros {
     constructor (runtime, extensionId, options) {
@@ -113,6 +113,40 @@ class RosUtil extends ROSLIB.Ros {
             return 'std_msgs/String';
         }
     }
+
+    goMove(X,Y,Z,W){
+        this.actionClient = new ROSLIB.ActionClient({
+            ros : this,
+            serverName : '/move_base',
+            actionName : 'move_base_msgs/MoveBaseAction',
+            timeout : 10
+        });
+        const positionVec3  = new ROSLIB.Vector3({x:Number(X),y:Number(Y),z:0});
+        const quater = new ROSLIB.Quaternion({x:0, y:0, z:Z, w:W});
+        const goal = new ROSLIB.Goal({
+            actionClient: this.actionClient,
+            goalMessage: {
+                target_pose: {
+                    header: {
+                        frame_id: 'map'
+                    },
+                    pose: new ROSLIB.Pose({
+                        position: positionVec3 ,
+                        orientation: quater
+                    })
+                }
+            }
+        });
+        goal.send();
+    }
+
+    createTopic(name,type){
+        return new ROSLIB.Topic({
+            ros: this,
+            name: name,
+            messageType: type
+        })
+    }
 }
 
 class Scratch3RosBase {
@@ -123,8 +157,8 @@ class Scratch3RosBase {
         this.runtime = runtime;
 
         this.runtime.registerPeripheralExtension(this.extensionId, this);
-
-        math.config({matrix: 'Array'});
+        this.math = mathjs.create(mathjs.all);
+        this.math.config({matrix: 'Array'});
 
         this.topicNames = ['/topic'];
         this.serviceNames = ['/service'];

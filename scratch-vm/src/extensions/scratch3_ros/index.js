@@ -1,5 +1,4 @@
-const math = require('mathjs');
-const JSON = require('circular-json');
+const JSON = require('json5');
 const BlockType = require('../../extension-support/block-type');
 const ArgumentType = require('../../extension-support/argument-type');
 const Scratch3RosBase = require('./RosUtil');
@@ -8,12 +7,136 @@ const icon = 'data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0i
 
 class Scratch3RosBlocks extends Scratch3RosBase {
 
-    constructor(runtime) {
-        super('ROS', 'ros', runtime);
+    get TOGGLE_MENU() {
+        return [
+            {
+                text: 'ON',
+                value: '1'
+            },
+            {
+                text: 'OFF',
+                value: '0'
+            },
+        ];
     }
 
+    constructor(runtime) {
+        super('ROS', 'ros', runtime);
+        this.start = false;
+        this.receiveIt = (msg) => {
+            if (msg != null) {
+                this.msg = msg.data;
+                this.start = true;
+            }
+        }
+    }
+
+
+    followMe({ STATE }) {
+        const ROS = this.ros;
+        ROS.getTopic("/scratch/state_change").then(rosTopic => {
+            var state;
+            if (STATE === "1") {
+                state = true;
+            } else {
+                state = false;
+            }
+            if (!rosTopic.name) return;
+            if (rosTopic.messageType === 'scratch_msgs/StateChange') {
+                msg = {
+                    target: 'hsr_follower',
+                    enable: state,
+                    detail: ''
+                };
+                rosTopic.publish(msg);
+            }
+        });
+    }
+
+    receiveMessage({VAR}, util) {
+        if (this.start && this.msg != null) {
+            this.start = false;
+            const variable = util.target.lookupVariableByNameAndType(VAR);
+            variable.value = this.msg;
+            if (variable.isCloud) {
+                util.ioQuery('cloud', 'requestUpdateVariable', [variable.name, this.msg]);
+            }
+            return true;
+        }
+        return this.start;
+    }
+
+    startReceiveMessage({ }) {
+        if (!this.topic) {
+            this.start = true;
+            this.topic = this.ros.createTopic("/scratch/from_operator", "std_msgs/String");
+            this.topic.subscribe(this.receiveIt);
+        }
+    }
+
+    endReceiveMessage({ }) {
+        this.start = false;
+        if (this.topic) {
+            this.topic.unsubscribe(this.receiveIt);
+            this.topic = null;
+        }
+    }
+
+    goXYRobot({ X, Y }) {
+        this.ros.goMove(X, Y);
+    }
+
+    goToRobot({ WHERE }) {
+        switch (WHERE) {
+            case "table1":
+                this.ros.goMove(0.300011873245, -2.59394598007, -0.745127831684, 0.666921670401);
+                return;
+            case "table2":
+                this.ros.goMove(2.36631679535, -2.55656433105, -0.697026790069, 0.717045085002);
+                return;
+            case "table3":
+                this.ros.goMove(4.33674192429, -2.47738742828, -0.681623495656, 0.731703088807);
+                return;
+            case "sink":
+                this.ros.goMove(5.893180370331, -3.66580319405, -0.00878589193078, 0.999961403307);
+                return;
+            case "refrigerator":
+                this.ros.goMove(5.75406360626, -0.322618514299, 0.0034197094787, 0.999994152776);
+                return;
+        }
+    }
+    getOperatorX(){
+        const that = this;
+        return new Promise(resolve => {
+            that.ros.getTopic("/scratch/operator_pos").then(
+                rosTopic => {
+                    if (rosTopic.messageType !== 'geometry_msgs/Vector3') resolve();
+                    const event = (msg) => {
+                        rosTopic.unsubscribe(event);
+                        resolve(msg.x);
+                    }
+                    rosTopic.subscribe(event);
+                });
+        });
+    }
+    getOperatorY(){
+        const that = this;
+        return new Promise(resolve => {
+            that.ros.getTopic("/scratch/operator_pos").then(
+                rosTopic => {
+                    if (rosTopic.messageType !== 'geometry_msgs/Vector3') resolve();
+                    const event = (msg) => {
+                        rosTopic.unsubscribe(event);
+                        resolve(msg.y);
+                    }
+                    rosTopic.subscribe(event);
+                });
+        });
+    }
+
+
     // customize to handle topics advertised from Scratch
-    subscribeTopic ({TOPIC}) {
+    subscribeTopic({ TOPIC }) {
         const that = this;
         return new Promise(resolve => {
             that.ros.getTopic(TOPIC).then(
@@ -33,11 +156,11 @@ class Scratch3RosBlocks extends Scratch3RosBase {
     }
 
     // customize to handle unadvertised topics
-    publishTopic ({MSG, TOPIC}, util) {
+    publishTopic({ MSG, TOPIC }, util) {
         const ROS = this.ros;
         let msg = this._getVariableValue(MSG, util.target);
         if (msg === null || typeof msg === 'undefined') msg = this._tryParse(MSG);
-        if (!this._isJSON(msg)) msg = {data: msg};
+        if (!this._isJSON(msg)) msg = { data: msg };
 
         ROS.getTopic(TOPIC).then(rosTopic => {
             if (!rosTopic.name) return;
@@ -45,11 +168,11 @@ class Scratch3RosBlocks extends Scratch3RosBase {
             if (rosTopic.messageType) {
                 if (rosTopic.messageType === 'std_msgs/String' &&
                     !(keys.length === 1 && keys[0] === 'data')) {
-                    msg = {data: JSON.stringify(msg)};
+                    msg = { data: JSON.stringify(msg) };
                 }
             } else {
                 if (!(keys.length === 1 && keys[0] === 'data')) {
-                    msg = {data: JSON.stringify(msg)};
+                    msg = { data: JSON.stringify(msg) };
                 }
                 rosTopic.messageType = ROS.getRosType(msg.data);
             }
@@ -57,12 +180,12 @@ class Scratch3RosBlocks extends Scratch3RosBase {
         });
     }
 
-    callService ({REQUEST, SERVICE}, util) {
+    callService({ REQUEST, SERVICE }, util) {
         const req = this._getVariableValue(REQUEST, util.target) || this._tryParse(REQUEST);
         return this.ros.callService(SERVICE, req);
     }
 
-    getParamValue ({NAME}) {
+    getParamValue({ NAME }) {
         const that = this;
         return new Promise(resolve => {
             const param = that.ros.getParam(NAME);
@@ -76,7 +199,7 @@ class Scratch3RosBlocks extends Scratch3RosBase {
         });
     }
 
-    setParamValue ({NAME, VALUE}) {
+    setParamValue({ NAME, VALUE }) {
         const param = this.ros.getParam(NAME);
         const val = Array.isArray(VALUE) ?
             VALUE.map(v => this._tryParse(v, v)) :
@@ -84,7 +207,7 @@ class Scratch3RosBlocks extends Scratch3RosBase {
         param.set(val);
     }
 
-    getSlot ({OBJECT, SLOT}, util) {
+    getSlot({ OBJECT, SLOT }, util) {
         const evalSlot = function (obj, slots) {
             const slotArr = slots.split(/\.|\[|\]/).filter(Boolean);
             for (let i = 0; i < slotArr.length; i++) {
@@ -113,7 +236,7 @@ class Scratch3RosBlocks extends Scratch3RosBase {
         return res;
     }
 
-    setSlot ({VAR, SLOT, VALUE}, util) {
+    setSlot({ VAR, SLOT, VALUE }, util) {
         const setNestedValue = function (obj, slots, value) {
             const last = slots.length - 1;
             for (let i = 0; i < last; i++) {
@@ -144,15 +267,15 @@ class Scratch3RosBlocks extends Scratch3RosBase {
         // TODO: cloud variables
     }
 
-    showVariable (args) {
+    showVariable(args) {
         this._changeVariableVisibility(args, true);
     }
 
-    hideVariable (args) {
+    hideVariable(args) {
         this._changeVariableVisibility(args, false);
     }
 
-    solveFormula ({EXPRESSION, OBJECT}, util) {
+    solveFormula({ EXPRESSION, OBJECT }, util) {
         const obj = this._getVariableValue(OBJECT, util.target) || this._tryParse(OBJECT);
         let binds;
         if (this._isJSON(obj)) {
@@ -165,15 +288,15 @@ class Scratch3RosBlocks extends Scratch3RosBase {
         }
 
         try {
-            const result = math.eval(EXPRESSION, binds);
-            if (math.typeof(result) === 'Unit') return result.toNumber();
+            const result = this.math.eval(EXPRESSION, binds);
+            if (this.math.typeof(result) === 'Unit') return result.toNumber();
             return result;
         } catch (err) {
             return;
         }
     }
 
-    getInfo () {
+    getInfo() {
         const stringArg = defValue => ({
             type: ArgumentType.STRING,
             defaultValue: defValue
@@ -209,8 +332,96 @@ class Scratch3RosBlocks extends Scratch3RosBase {
             colourTertiary: '#689F38',
 
             menuIconURI: icon,
+            blockIconURI: icon,
 
             blocks: [
+                {
+                    opcode: 'receiveMessage',
+                    text: 'Receive [MESSAGE] and put into [VAR]',
+                    blockType: BlockType.HAT,
+                    arguments: {
+                        MESSAGE: {
+                            menu: 'messageMenu',
+                            type: ArgumentType.STRING,
+                            defaultValue: 'from_operator'
+                        },
+                        VAR: variableArg
+                    }
+                },
+                {
+                    opcode: 'startReceiveMessage',
+                    text: 'Start [MESSAGE]',
+                    blockType: BlockType.COMMAND,
+                    arguments: {
+                        MESSAGE: {
+                            menu: 'messageMenu',
+                            type: ArgumentType.STRING,
+                            defaultValue: 'from_operator'
+                        }
+                    }
+                },
+                {
+                    opcode: 'endReceiveMessage',
+                    text: 'Stop [MESSAGE]',
+                    blockType: BlockType.COMMAND,
+                    arguments: {
+                        MESSAGE: {
+                            menu: 'messageMenu',
+                            type: ArgumentType.STRING,
+                            defaultValue: 'from_operator'
+                        }
+                    }
+                },
+                '---',
+                {
+                    opcode: 'followMe',
+                    blockType: BlockType.COMMAND,
+                    text: 'Change Follow me into [STATE]',
+                    arguments: {
+                        STATE: {
+                            menu: 'toggleMenu',
+                            type: ArgumentType.STRING,
+                            defaultValue: '1'
+                        }
+                    }
+                },
+                {
+                    opcode: 'goXYRobot',
+                    blockType: BlockType.COMMAND,
+                    text: 'Move to (X: [X], Y: [Y])',
+                    arguments: {
+                        X: {
+                            type: ArgumentType.NUMBER,
+                            defaultValue: 0
+                        },
+                        Y: {
+                            type: ArgumentType.NUMBER,
+                            defaultValue: 0
+                        },
+                    }
+                },
+                {
+                    opcode: 'goToRobot',
+                    blockType: BlockType.COMMAND,
+                    text: 'Go to [WHERE]',
+                    arguments: {
+                        WHERE: {
+                            menu: 'areaNameMenu',
+                            type: ArgumentType.STRING,
+                        }
+                    }
+                },
+                {
+                    opcode: 'getOperatorX',
+                    blockType: BlockType.REPORTER,
+                    text: 'Get operator X'
+                },
+                {
+                    opcode: 'getOperatorY',
+                    blockType: BlockType.REPORTER,
+                    text: 'Get operator Y'
+                },
+                '---',
                 {
                     opcode: 'subscribeTopic',
                     blockType: BlockType.REPORTER,
@@ -309,7 +520,45 @@ class Scratch3RosBlocks extends Scratch3RosBase {
                 topicsMenu: '_updateTopicList',
                 servicesMenu: '_updateServiceList',
                 variablesMenu: '_updateVariableList',
-                paramsMenu: '_updateParamList'
+                paramsMenu: '_updateParamList',
+                toggleMenu: {
+                    acceptReporters: false,
+                    items: this.TOGGLE_MENU
+                },
+                messageMenu: {
+                    acceptReporters: false,
+                    items: [
+                        {
+                            text: 'from operator',
+                            value: 'from_operator'
+                        },
+                    ]
+                },
+                areaNameMenu: {
+                    acceptReporters: false,
+                    items: [
+                        {
+                            text: 'table1',
+                            value: 'table1'
+                        },
+                        {
+                            text: 'table2',
+                            value: 'table2'
+                        },
+                        {
+                            text: 'table3',
+                            value: 'table3'
+                        },
+                        {
+                            text: 'sink',
+                            value: 'sink'
+                        },
+                        {
+                            text: 'refrigerator',
+                            value: 'refrigerator'
+                        },
+                    ]
+                }
             }
         };
     }
